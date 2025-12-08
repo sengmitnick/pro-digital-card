@@ -1,0 +1,126 @@
+<!-- AI Assistant Floating Widget -->
+<div data-controller="dashboard-assistant"
+     data-dashboard-assistant-profile-id-value="<%= current_user.profile.id %>"
+     class="fixed bottom-0 right-0 z-50">
+  
+  <!-- Floating Bubble Button -->
+  <div data-dashboard-assistant-target="bubble" 
+       class="fixed bottom-6 right-6 cursor-pointer group"
+       data-action="click->dashboard-assistant#toggleWidget">
+    <div class="relative">
+      <!-- Main bubble -->
+      <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-dark rounded-full shadow-lg flex items-center justify-center transition-transform group-hover:scale-110">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+        </svg>
+      </div>
+      
+      <!-- Unread badge -->
+      <div class="unread-badge hidden absolute -top-1 -right-1 w-6 h-6 bg-danger rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+        0
+      </div>
+      
+      <!-- Pulse animation -->
+      <div class="absolute inset-0 w-16 h-16 bg-primary rounded-full animate-ping opacity-20"></div>
+    </div>
+    
+    <!-- Tooltip -->
+    <div class="absolute bottom-full right-0 mb-2 px-3 py-2 bg-surface-elevated border border-border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+      <p class="text-sm text-primary font-medium">AI 助手</p>
+      <p class="text-xs text-secondary">点击开始对话</p>
+      <div class="absolute top-full right-4 -mt-1 w-2 h-2 bg-surface-elevated border-r border-b border-border transform rotate-45"></div>
+    </div>
+  </div>
+
+  <!-- Chat Widget -->
+  <div data-dashboard-assistant-target="widget"
+       class="fixed bottom-6 right-6 w-96 h-[600px] bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden translate-y-full opacity-0 transition-all duration-300 ease-in-out">
+    
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-primary to-primary-dark text-white p-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold">AI 助手</h3>
+          <p class="text-xs text-white/80">智能名片管理</p>
+        </div>
+      </div>
+      <button class="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              data-action="click->dashboard-assistant#closeWidget">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="h-[calc(100%-140px)] overflow-y-auto p-4 bg-gradient-to-b from-surface to-surface-elevated"
+         data-dashboard-assistant-target="messages">
+      <!-- Messages will be added here dynamically -->
+    </div>
+
+    <!-- Input Area -->
+    <div class="absolute bottom-0 left-0 right-0 p-4 bg-surface border-t border-border">
+      <form data-dashboard-assistant-target="form" action="javascript:void(0);">
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            placeholder="输入你的问题或指令..."
+            class="form-input flex-1 text-sm"
+            data-dashboard-assistant-target="input"
+            disabled
+            autocomplete="off">
+          <button 
+            type="submit" 
+            class="btn-primary px-4"
+            data-dashboard-assistant-target="sendButton"
+            disabled>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+          </button>
+        </div>
+        <p class="text-xs text-muted mt-2">
+          💡 试试说：\"帮我更新电话号码\" 或 \"修改我的个人简介\"
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Custom CSS for animations -->
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  .animate-fade-out {
+    animation: fade-out 0.3s ease-out;
+  }
+</style>

@@ -1,0 +1,21 @@
+<div class="min-h-screen flex items-center justify-center bg-surface py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-primary mb-2">专业名片</h1>
+      <p class="text-secondary">登录您的账户</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <%= render 'sessions/login_form_with_oauth' %>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <p class="text-sm text-secondary">
+        还没有账户？
+        <%= link_to "立即注册", sign_up_path, class: "font-medium text-primary hover:text-primary-dark" %>
+      </p>
+    </div>
+  </div>
+</div>

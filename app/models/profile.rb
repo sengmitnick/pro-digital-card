@@ -1,0 +1,56 @@
+class Profile < ApplicationRecord
+  extend FriendlyId
+  friendly_id :full_name, use: :slugged
+
+  belongs_to :user
+  has_many :case_studies, dependent: :destroy
+  has_many :honors, dependent: :destroy
+  has_many :chat_sessions, dependent: :destroy
+  has_many :chat_messages, through: :chat_sessions
+  
+  has_one_attached :avatar
+
+  serialize :specializations, coder: JSON
+
+  validates :full_name, presence: true
+  validates :title, presence: true
+  validates :slug, uniqueness: true, allow_blank: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  validates :phone, format: { with: /\A[0-9\-\(\)\+\s]+\z/ }, allow_blank: true
+
+  # Default stats structure
+  after_initialize :set_default_stats, if: :new_record?
+  after_initialize :set_default_onboarding_data, if: :new_record?
+
+  def set_default_stats
+    self.stats ||= {
+      'years_experience' => 0,
+      'cases_handled' => 0,
+      'clients_served' => 0,
+      'success_rate' => 0
+    }
+  end
+
+  def specializations_array
+    specializations.is_a?(Array) ? specializations : []
+  end
+
+  # Onboarding status methods
+  def needs_onboarding?
+    !onboarding_completed
+  end
+
+  def complete_onboarding!
+    update(onboarding_completed: true, onboarding_step: 'completed')
+  end
+
+  def set_default_onboarding_data
+    self.onboarding_data ||= {
+      'intro' => nil,
+      'specializations_text' => nil,
+      'case_story' => nil,
+      'brand_style' => nil,
+      'contact_preferences' => nil
+    }
+  end
+end

@@ -1,0 +1,22 @@
+<nav class="bg-surface border-b border-border">
+  <div class="container-xl mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <%= link_to root_path, class: "text-2xl font-bold text-primary" do %>
+          专业名片
+        <% end %>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center space-x-4">
+        <% if user_signed_in? %>
+          <%= render 'shared/user_dropdown' %>
+        <% else %>
+          <%= link_to "登录", sign_in_path, class: "btn-ghost" %>
+          <%= link_to "注册", sign_up_path, class: "btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

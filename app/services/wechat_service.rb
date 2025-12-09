@@ -1,7 +1,6 @@
 class WechatService < ApplicationService
   def initialize(url)
     @url = url
-    @client = WeixinAuthorize::Client.new(ENV['WECHAT_APPID'], ENV['WECHAT_APPSECRET'])
   end
 
   def call
@@ -10,8 +9,13 @@ class WechatService < ApplicationService
     end
 
     begin
-      # Get jsapi_ticket from weixin_authorize gem
-      ticket_result = @client.jsapi_ticket
+      # Create client instance
+      client = WeixinAuthorize::Client.new(ENV['WECHAT_APPID'], ENV['WECHAT_APPSECRET'])
+      
+      # Get jsapi_ticket
+      ticket_result = client.jsapi_ticket
+
+      Rails.logger.info("WeChat jsapi_ticket result: #{ticket_result.inspect}")
 
       if ticket_result.is_a?(Hash) && ticket_result['ticket'].present?
         signature_data = generate_signature(ticket_result['ticket'])
@@ -21,7 +25,7 @@ class WechatService < ApplicationService
         error_result('Failed to get jsapi_ticket')
       end
     rescue StandardError => e
-      Rails.logger.error("WechatService error: #{e.message}")
+      Rails.logger.error("WechatService error: #{e.class.name} - #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
       error_result(e.message)
     end

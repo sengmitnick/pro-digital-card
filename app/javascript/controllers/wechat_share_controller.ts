@@ -68,7 +68,7 @@ export default class extends Controller<HTMLElement> {
 
   private configWechat(config: any): void {
     wx.config({
-      debug: false, // Use vConsole for debugging instead
+      debug: true, // Use vConsole for debugging instead
       appId: config.appId,
       timestamp: config.timestamp,
       nonceStr: config.nonceStr,
@@ -76,8 +76,6 @@ export default class extends Controller<HTMLElement> {
       jsApiList: [
         'updateAppMessageShareData',
         'updateTimelineShareData',
-        'onMenuShareTimeline',
-        'onMenuShareAppMessage'
       ]
     })
 
@@ -128,25 +126,6 @@ export default class extends Controller<HTMLElement> {
       }
     })
 
-    // Old API (for compatibility with older WeChat versions)
-    wx.onMenuShareAppMessage({
-      title: shareData.title,
-      desc: shareData.desc,
-      link: shareData.link,
-      imgUrl: shareData.imgUrl,
-      success: () => {
-        console.log('User shared to chat')
-      }
-    })
-
-    wx.onMenuShareTimeline({
-      title: shareData.title,
-      link: shareData.link,
-      imgUrl: shareData.imgUrl,
-      success: () => {
-        console.log('User shared to timeline')
-      }
-    })
   }
 
   private getDefaultImage(): string {

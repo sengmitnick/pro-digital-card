@@ -1,0 +1,166 @@
+zh-CN:
+  hello: "你好，世界"
+  
+  admin:
+    # 通用
+    common:
+      actions: "操作"
+      view: "查看"
+      edit: "编辑"
+      delete: "删除"
+      create: "创建"
+      update: "更新"
+      cancel: "取消"
+      save: "保存"
+      search: "搜索"
+      filter: "筛选"
+      clear: "清空"
+      back: "返回"
+      confirm_delete: "确定要删除吗？"
+      created_at: "创建时间"
+      updated_at: "更新时间"
+      no_file: "无文件"
+      
+    # 导航栏
+    navigation:
+      menu_title: "菜单"
+      system_title: "系统"
+      dashboard: "仪表盘"
+      profiles: "个人资料"
+      case_studies: "案例研究"
+      honors: "荣誉奖项"
+      organizations: "组织管理"
+      administrators: "管理员"
+      operation_logs: "操作日志"
+      job_queue: "任务队列"
+      
+    # 用户菜单
+    user_menu:
+      administrator: "管理员"
+      account_settings: "账户设置"
+      logout: "退出登录"
+      
+    # 仪表盘
+    dashboard:
+      admin_title: "管理后台"
+      title: "管理仪表盘"
+      subtitle: "系统概览和快速操作"
+      total_administrators: "管理员总数"
+      quick_actions: "快速操作"
+      new_admin: "新建管理员"
+      view_all_logs: "查看所有日志"
+      change_password: "修改密码"
+      recent_admin_actions: "最近的管理操作"
+      view_all: "查看全部 →"
+      no_recent_actions: "暂无最近的管理操作"
+      ago: "前"
+      
+    # 管理员管理
+    administrators:
+      title: "管理员管理"
+      new: "新建管理员"
+      name: "姓名"
+      role: "角色"
+      no_administrators: "暂无管理员"
+      get_started: "开始创建第一个管理员"
+      cannot_delete_self: "无法删除自己"
+      confirm_delete: "确定要删除此管理员吗？"
+      
+    # 个人资料管理
+    profiles:
+      title: "个人资料管理"
+      new: "新建资料"
+      full_name: "全名"
+      title_field: "职位"
+      user: "用户"
+      company: "公司"
+      no_profiles: "暂无个人资料"
+      get_started: "开始创建新的个人资料"
+      confirm_delete: "确定要删除此个人资料吗？"
+      
+    # 案例研究管理
+    case_studies:
+      title: "案例研究管理"
+      new: "新建案例"
+      case_title: "标题"
+      category: "分类"
+      profile: "相关资料"
+      date: "日期"
+      no_case_studies: "暂无案例研究"
+      get_started: "开始创建新的案例研究"
+      confirm_delete: "确定要删除此案例研究吗？"
+      
+    # 荣誉奖项管理
+    honors:
+      title: "荣誉奖项管理"
+      new: "新建荣誉"
+      honor_title: "标题"
+      organization: "颁发机构"
+      profile: "获奖者"
+      date: "获奖日期"
+      no_honors: "暂无荣誉奖项"
+      get_started: "开始创建新的荣誉奖项"
+      confirm_delete: "确定要删除此荣誉奖项吗？"
+      
+    # 组织管理
+    organizations:
+      title: "组织管理"
+      new: "新建组织"
+      name: "名称"
+      description: "描述"
+      admin_user: "管理用户"
+      logo: "徽标"
+      no_organizations: "暂无组织"
+      get_started: "开始创建新的组织"
+      confirm_delete: "确定要删除此组织吗？"
+      
+    # 操作日志
+    operation_logs:
+      title: "操作日志"
+      administrator: "管理员"
+      action: "操作"
+      resource: "资源"
+      ip: "IP地址"
+      time: "时间"
+      all_actions: "所有操作"
+      all_administrators: "所有管理员"
+      no_logs: "暂无操作日志"
+      no_logs_desc: "当前没有操作日志可显示"
+      
+  # 时间相关
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "大约1小时"
+        other: "大约%{count}小时"
+      about_x_months:
+        one: "大约1个月"
+        other: "大约%{count}个月"
+      about_x_years:
+        one: "大约1年"
+        other: "大约%{count}年"
+      almost_x_years:
+        one: "接近1年"
+        other: "接近%{count}年"
+      half_a_minute: "半分钟"
+      less_than_x_minutes:
+        one: "不到1分钟"
+        other: "不到%{count}分钟"
+      less_than_x_seconds:
+        one: "不到1秒"
+        other: "不到%{count}秒"
+      over_x_years:
+        one: "超过1年"
+        other: "超过%{count}年"
+      x_days:
+        one: "1天"
+        other: "%{count}天"
+      x_minutes:
+        one: "1分钟"
+        other: "%{count}分钟"
+      x_months:
+        one: "1个月"
+        other: "%{count}个月"
+      x_seconds:
+        one: "1秒"
+        other: "%{count}秒"

@@ -3,14 +3,23 @@ class TeamsController < ApplicationController
 
   def index
     @full_render = true  # Hide navbar for teams view
-    @profile = current_user.profile
-    @organization = @profile&.organization
+    @current_user_profile = current_user.profile
+    
+    # Get organization based on profile_id parameter
+    if params[:profile_id].present?
+      @profile = Profile.find_by(id: params[:profile_id])
+      @organization = @profile&.organization
+    else
+      # Fallback to current user's profile
+      @profile = @current_user_profile
+      @organization = @profile&.organization
+    end
 
     # Auto-assign to default organization if user has no organization
-    if @profile && !@organization
+    if @current_user_profile && !@current_user_profile.organization
       default_org = Organization.first
       if default_org
-        @profile.update(organization: default_org, status: 'approved')
+        @current_user_profile.update(organization: default_org, status: 'approved')
         @organization = default_org
       end
     end
@@ -20,6 +29,10 @@ class TeamsController < ApplicationController
                               .includes(:user)
                               .order('profiles.department ASC, profiles.full_name ASC')
       @departments = @members.group_by(&:department)
+      
+      # Check if current user is admin of this organization
+      @is_admin = @organization.is_admin?(current_user)
+      @is_own_profile = @profile&.id == @current_user_profile&.id
     end
   end
 

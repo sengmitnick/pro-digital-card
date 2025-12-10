@@ -1,14 +1,14 @@
-<% content_for :title, "Organizations" %>
+<% content_for :title, t('admin.navigation.organizations') %>
 
 <div class="container-xl">
   <!-- Page Title and Actions -->
   <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-50">Organizations Management</h1>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-50"><%= t('admin.organizations.title') %></h1>
     <%= link_to new_admin_organization_path, class: "btn-primary" do %>
       <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
       </svg>
-      New Organization
+      <%= t('admin.organizations.new') %>
     <% end %>
   </div>
 
@@ -21,12 +21,12 @@
             <thead class="bg-gray-50 dark:bg-gray-800">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Admin user</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Logo</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created At</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.organizations.name') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.organizations.description') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.organizations.admin_user') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.organizations.logo') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.common.created_at') %></th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t('admin.common.actions') %></th>
               </tr>
             </thead>
             <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
@@ -45,7 +45,7 @@
                     <%= organization.admin_user&.name %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    <%= organization.logo.attached? ? organization.logo.filename : 'No file' %>
+                    <%= organization.logo.attached? ? organization.logo.filename : t('admin.common.no_file') %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     <%= organization.created_at.strftime("%Y-%m-%d %H:%M") %>
@@ -64,7 +64,7 @@
                         </svg>
                       <% end %>
                       <%= link_to admin_organization_path(organization.id), method: :delete,
-                          data: { confirm: "Are you sure you want to delete this organization?" },
+                          data: { confirm: t('admin.organizations.confirm_delete') },
                           class: "p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors" do %>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -84,8 +84,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">No organizations</h3>
-          <p class="text-gray-500 dark:text-gray-400 mb-6">Get started by creating a new organization.</p>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2"><%= t('admin.organizations.no_organizations') %></h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-6"><%= t('admin.organizations.get_started') %></p>
           <%= link_to new_admin_organization_path, class: "btn-primary" do %>
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>

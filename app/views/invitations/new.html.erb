@@ -1,26 +1,100 @@
 <div class="container-sm flex items-center justify-center flex-1 py-12">
-  <div class="card w-full">
+  <div class="card w-full max-w-2xl">
     <div class="card-body">
-      <h1 class="text-3xl font-bold text-center text-primary mb-8">Send Invitation</h1>
+      <h1 class="text-3xl font-bold text-center text-primary mb-2">加入「<%= @organization.name %>」</h1>
+      <p class="text-center text-on-surface-variant mb-8">填写以下信息完成成员注册，管理员审核通过后账号将被激活</p>
 
-      <%= form_with model: @user, url: invitation_path, local: true, class: "space-y-6" do |form| %>
+      <%= render 'shared/form_error_message', model: @user %>
+
+      <%= form_with model: @user, url: invitation_path(token: params[:token]), local: true, class: "space-y-6" do |form| %>
+        <!-- 基本信息 -->
         <div>
           <%= form.label :email, class: "form-label" do %>
-            Email Address
+            邮箱 <span class="text-error">*</span>
           <% end %>
           <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-input" %>
-          <div class="form-help">
-            An invitation will be sent to this email address
+        </div>
+
+        <!-- 密码 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= form.label :password, class: "form-label" do %>
+              密码 <span class="text-error">*</span>
+            <% end %>
+            <%= form.password_field :password, required: true, autocomplete: "new-password", class: "form-input" %>
+            <div class="form-help">
+              至少 <%= User::MIN_PASSWORD %> 个字符
+            </div>
+          </div>
+
+          <div>
+            <%= form.label :password_confirmation, class: "form-label" do %>
+              确认密码 <span class="text-error">*</span>
+            <% end %>
+            <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-input" %>
           </div>
         </div>
 
+        <!-- Profile 信息 -->
+        <%= form.fields_for :profile do |profile_form| %>
+          <!-- 真实姓名和头像 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div>
+              <%= profile_form.label :full_name, class: "form-label" do %>
+                真实姓名 <span class="text-error">*</span>
+              <% end %>
+              <%= profile_form.text_field :full_name, required: true, class: "form-input" %>
+              <div class="form-help">
+                请填写您的真实姓名，用于个人名片展示
+              </div>
+            </div>
+            
+            <div data-controller="image-preview">
+              <%= profile_form.label :avatar, class: "form-label" do %>
+                头像
+              <% end %>
+              <%= profile_form.file_field :avatar, accept: "image/*", class: "form-input", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
+              <div class="form-help">
+                支持 JPG、PNG 格式，建议尺寸 400x400 像素
+              </div>
+              <div class="mt-4" data-image-preview-target="container">
+                <img class="w-32 h-32 rounded-full object-cover hidden" data-image-preview-target="preview">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <%= profile_form.label :title, class: "form-label" do %>
+                头衔 <span class="text-error">*</span>
+              <% end %>
+              <%= profile_form.text_field :title, required: true, class: "form-input", placeholder: "例如：主任医师" %>
+            </div>
+
+            <div>
+              <%= profile_form.label :department, class: "form-label" do %>
+                部门
+              <% end %>
+              <%= profile_form.text_field :department, class: "form-input", placeholder: "例如：心内科" %>
+            </div>
+          </div>
+
+          <div>
+            <%= profile_form.label :bio, class: "form-label" do %>
+              个人简介
+            <% end %>
+            <%= profile_form.text_area :bio, rows: 4, class: "form-input", placeholder: "介绍您的专业背景、研究方向、擅长领域等..." %>
+          </div>
+        <% end %>
+
         <div class="pt-2">
-          <%= form.submit "Send an invitation", class: "btn-primary w-full btn-lg" %>
+          <%= form.submit "提交申请", class: "btn-primary w-full btn-lg" %>
         </div>
       <% end %>
 
       <div class="text-center mt-8">
-        <%= link_to "Back", root_path, class: "text-primary hover:text-primary-dark underline font-medium transition-colors" %>
+        <%= link_to "返回首页", root_path, class: "text-primary hover:text-primary-dark underline font-medium transition-colors" %>
       </div>
+    </div>
   </div>
 </div>

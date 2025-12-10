@@ -5,7 +5,8 @@ class User < ApplicationRecord
   has_secure_password validations: false
   
   has_one :profile, dependent: :destroy
-  after_create :create_default_profile
+  accepts_nested_attributes_for :profile
+  after_create :create_default_profile, unless: -> { profile.present? }
 
   # ========== Role-based Access Control (Optional) ==========
   # If you need roles (premium, moderator, etc.), add a `role` field:
@@ -39,9 +40,16 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :name, uniqueness: true, if: -> { name.present? }
 
   validates :password, allow_nil: true, length: { minimum: MIN_PASSWORD }, if: :password_required?
   validates :password, confirmation: true, if: :password_required?
+  
+  before_validation :generate_name_from_email, if: -> { name.blank? && email.present? }
+  
+  # Activation state
+  scope :activated, -> { where(activated: true) }
+  scope :pending_activation, -> { where(activated: false) }
 
   normalizes :email, with: -> { _1.strip.downcase }
 
@@ -95,8 +103,30 @@ class User < ApplicationRecord
   def email_was_generated?
     email.end_with?(GENERATED_EMAIL_SUFFIX)
   end
+  
+  def activated?
+    activated == true
+  end
+  
+  def pending_activation?
+    activated == false
+  end
+  
+  def activate!
+    update(activated: true)
+  end
 
   private
+  
+  def generate_name_from_email
+    base_name = email.split('@').first
+    self.name = base_name
+    counter = 1
+    while User.exists?(name: self.name)
+      self.name = "#{base_name}#{counter}"
+      counter += 1
+    end
+  end
 
   def password_required?
     return false if oauth_user?

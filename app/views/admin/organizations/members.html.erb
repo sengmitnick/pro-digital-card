@@ -43,9 +43,9 @@
                   <td class="p-4 text-on-surface-variant"><%= profile.created_at.strftime('%Y-%m-%d') %></td>
                   <td class="p-4 text-right">
                     <div class="flex justify-end gap-2">
-                      <%= button_to '通过', admin_organization_approve_member_path(@organization, profile_id: profile.id), 
+                      <%= button_to '通过', approve_member_admin_organization_path(@organization, profile_id: profile.id), 
                           method: :post, class: 'btn-primary btn-sm' %>
-                      <%= button_to '拒绝', admin_organization_reject_member_path(@organization, profile_id: profile.id), 
+                      <%= button_to '拒绝', reject_member_admin_organization_path(@organization, profile_id: profile.id), 
                           method: :post, class: 'btn-error btn-sm', 
                           data: { confirm: '确定要拒绝该成员吗？' } %>
                     </div>

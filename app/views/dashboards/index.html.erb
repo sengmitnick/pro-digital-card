@@ -70,12 +70,6 @@
           </div>
           
           <div class="space-y-2 mb-4">
-            <% if @profile.email.present? %>
-              <p class="text-sm text-secondary"><strong>邮箱：</strong><%= @profile.email %></p>
-            <% end %>
-            <% if @profile.phone.present? %>
-              <p class="text-sm text-secondary"><strong>电话：</strong><%= @profile.phone %></p>
-            <% end %>
             <% if @profile.location.present? %>
               <p class="text-sm text-secondary"><strong>地址：</strong><%= @profile.location %></p>
             <% end %>

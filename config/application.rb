@@ -42,6 +42,10 @@ module Myapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # I18n configuration
+    config.i18n.default_locale = :'zh-CN'
+    config.i18n.available_locales = [:'zh-CN', :en]
 
     # Application name configuration
     config.x.appname = File.read(Rails.root.join('config', 'appname.txt')).strip

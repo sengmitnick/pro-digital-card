@@ -24,6 +24,14 @@ class Organization < ApplicationRecord
   def is_admin?(user)
     admin_user_id == user&.id
   end
+  
+  def regenerate_invite_token!
+    update(invite_token: SecureRandom.urlsafe_base64(32))
+  end
+  
+  def invite_url
+    Rails.application.routes.url_helpers.new_invitation_url(token: invite_token)
+  end
 
   private
 

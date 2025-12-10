@@ -71,7 +71,13 @@ class Profile < ApplicationRecord
   end
 
   def approve!
-    update(status: 'approved')
+    transaction do
+      update!(status: 'approved')
+      user.update!(activated: true) if user.present?
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    errors.add(:base, e.message)
+    false
   end
 
   def reject!

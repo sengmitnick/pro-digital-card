@@ -5,9 +5,14 @@ FactoryBot.define do
     password { "password123" }
     password_confirmation { "password123" }
     verified { true }
+    activated { true }
 
     trait :unverified do
       verified { false }
+    end
+    
+    trait :pending_activation do
+      activated { false }
     end
   end
 end

@@ -17,11 +17,18 @@ class SessionsController < ApplicationController
 
   def create
     if user = User.authenticate_by(email: params[:user][:email], password: params[:user][:password])
+      # 检查用户是否已激活
+      unless user.activated?
+        redirect_to sign_in_path(email_hint: params[:user][:email]), 
+                    alert: "您的账号尚未激活，请等待管理员审核通过后再登录"
+        return
+      end
+      
       @session = user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: @session.id, httponly: true }
-      redirect_to root_path, notice: "Signed in successfully"
+      redirect_to root_path, notice: "登录成功"
     else
-      redirect_to sign_in_path(email_hint: params[:user][:email]), alert: "That email or password is incorrect"
+      redirect_to sign_in_path(email_hint: params[:user][:email]), alert: "邮箱或密码错误"
     end
   end
 

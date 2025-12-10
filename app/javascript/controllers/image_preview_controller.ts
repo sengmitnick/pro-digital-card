@@ -4,11 +4,14 @@ import { Controller } from "@hotwired/stimulus"
  * ImagePreview Controller - Handles image preview before upload
  */
 export default class extends Controller<HTMLElement> {
-  static targets = ["input", "preview", "placeholder"]
+  static targets = ["input", "preview", "placeholder", "container"]
 
   declare readonly inputTarget: HTMLInputElement
   declare readonly previewTarget: HTMLImageElement
   declare readonly placeholderTarget: HTMLElement
+  declare readonly hasPlaceholderTarget: boolean
+  declare readonly hasContainerTarget: boolean
+  declare readonly containerTarget: HTMLElement
 
   connect(): void {
     console.log("ImagePreview connected")

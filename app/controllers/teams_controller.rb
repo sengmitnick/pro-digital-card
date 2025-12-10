@@ -29,8 +29,6 @@ class TeamsController < ApplicationController
                               .order('profiles.department ASC, profiles.full_name ASC')
       @departments = @members.group_by(&:department)
       
-      # Check if current user is admin of this organization
-      @is_admin = current_user && @organization.is_admin?(current_user)
       @is_own_profile = @profile&.id == @current_user_profile&.id
     end
   end

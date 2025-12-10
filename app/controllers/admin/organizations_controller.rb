@@ -53,6 +53,42 @@ class Admin::OrganizationsController < Admin::BaseController
       redirect_to members_admin_organization_path(@organization), alert: '删除成员失败。'
     end
   end
+  
+  def add_user
+    email = params[:email]&.strip&.downcase
+    
+    if email.blank?
+      redirect_to members_admin_organization_path(@organization), alert: '请输入用户邮箱。'
+      return
+    end
+    
+    user = User.find_by(email: email)
+    
+    if user.nil?
+      redirect_to members_admin_organization_path(@organization), alert: "未找到邮箱为 #{email} 的用户。"
+      return
+    end
+    
+    profile = user.profile
+    
+    if profile.nil?
+      redirect_to members_admin_organization_path(@organization), alert: '该用户没有个人资料。'
+      return
+    end
+    
+    # Check if profile already belongs to this organization
+    if profile.organization_id == @organization.id && profile.status != 'rejected'
+      redirect_to members_admin_organization_path(@organization), alert: '该用户已在组织中。'
+      return
+    end
+    
+    # Add user to organization as approved
+    if profile.update(organization: @organization, status: 'approved')
+      redirect_to members_admin_organization_path(@organization), notice: "用户 #{email} 已成功添加到已批准成员。"
+    else
+      redirect_to members_admin_organization_path(@organization), alert: '添加用户失败。'
+    end
+  end
 
   private
 

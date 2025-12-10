@@ -61,22 +61,6 @@
     <% end %>
   </div>
 
-  <!-- Invite Button (Admin Only) -->
-  <% if @is_admin && @is_own_profile && @organization %>
-    <button 
-      type="button"
-      class="fixed bottom-24 right-6 z-40 btn-primary rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:shadow-xl transition-all"
-      data-controller="team-invite"
-      data-action="click->team-invite#generateInvite"
-      data-team-invite-org-name-value="<%= @organization.name %>"
-      data-team-invite-invite-token-value="<%= @organization.invite_token %>"
-      title="邀请成员">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-      </svg>
-    </button>
-  <% end %>
-
   <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
     <div class="container mx-auto px-4">

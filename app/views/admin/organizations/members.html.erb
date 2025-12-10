@@ -1,6 +1,19 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="mb-6">
+  <div class="mb-6 flex justify-between items-center">
     <h1 class="text-3xl font-bold text-on-surface"><%= @organization.name %> - 成员管理</h1>
+    <button 
+      type="button"
+      class="btn-primary"
+      data-controller="team-invite"
+      data-action="click->team-invite#generateInvite"
+      data-team-invite-org-name-value="<%= @organization.name %>"
+      data-team-invite-invite-token-value="<%= @organization.invite_token %>"
+      title="生成邀请链接">
+      <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+      </svg>
+      邀请成员
+    </button>
   </div>
 
   <!-- Pending Members -->
@@ -59,6 +72,25 @@
         </div>
       <% else %>
         <p class="text-on-surface-variant text-center py-8">暂无待审核成员</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Add User Form -->
+  <div class="card mb-8">
+    <div class="card-header">
+      <h2 class="text-xl font-semibold text-on-surface">添加已注册用户</h2>
+    </div>
+    <div class="card-body">
+      <%= form_with url: add_user_admin_organization_path(@organization), method: :post, class: "flex gap-4 items-end" do |f| %>
+        <div class="flex-1">
+          <%= f.label :email, '用户邮箱', class: 'block text-sm font-medium text-on-surface mb-2' %>
+          <%= f.email_field :email, 
+              placeholder: '请输入用户邮箱，例如：user@example.com',
+              class: 'form-input w-full',
+              required: true %>
+        </div>
+        <%= f.submit '添加到已批准成员', class: 'btn-primary' %>
       <% end %>
     </div>
   </div>

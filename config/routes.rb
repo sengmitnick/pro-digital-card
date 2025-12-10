@@ -105,6 +105,7 @@ Rails.application.routes.draw do
       post 'members/:profile_id/reject', action: :reject_member, as: :reject_member, on: :member
       post 'members/:profile_id/reactivate', action: :reactivate_member, as: :reactivate_member, on: :member
       delete 'members/:profile_id/destroy', action: :destroy_member, as: :destroy_member, on: :member
+      post :add_user, on: :member
     end
     resources :honors
     resources :case_studies

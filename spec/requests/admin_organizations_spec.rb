@@ -54,4 +54,52 @@ RSpec.describe "Admin::Organizations", type: :request do
       expect(response).to have_http_status(:redirect)
     end
   end
+
+  describe "POST /admin/organization/add_user" do
+    let(:organization) { Organization.first_or_create!(name: '默认组织') }
+    
+    it "adds a user to approved members by email" do
+      user = create(:user)
+      
+      post add_user_admin_organization_path, params: { email: user.email }
+      
+      expect(response).to have_http_status(:redirect)
+      expect(user.profile.reload.organization).to eq(organization)
+      expect(user.profile.reload.status).to eq('approved')
+    end
+    
+    it "does not add user with blank email" do
+      post add_user_admin_organization_path, params: { email: '' }
+      
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:alert]).to include('请输入用户邮箱')
+    end
+    
+    it "does not add non-existent user" do
+      post add_user_admin_organization_path, params: { email: 'nonexistent@example.com' }
+      
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:alert]).to include('未找到邮箱')
+    end
+    
+    it "does not add user without profile" do
+      user = create(:user)
+      user.profile.destroy
+      
+      post add_user_admin_organization_path, params: { email: user.email }
+      
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:alert]).to include('该用户没有个人资料')
+    end
+    
+    it "does not add user already in organization" do
+      user = create(:user)
+      user.profile.update(organization: organization, status: 'approved')
+      
+      post add_user_admin_organization_path, params: { email: user.email }
+      
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:alert]).to include('该用户已在组织中')
+    end
+  end
 end

@@ -78,7 +78,7 @@ class User < ApplicationRecord
     user = find_by(provider: auth.provider, uid: auth.uid)
     return user if user
 
-    # If not found, create a new user
+    # If not found, create a new user (requires activation)
     verified = !email.end_with?(GENERATED_EMAIL_SUFFIX)
     create(
       name: name,
@@ -86,6 +86,7 @@ class User < ApplicationRecord
       provider: auth.provider,
       uid: auth.uid,
       verified: verified,
+      activated: false,
     )
   end
 

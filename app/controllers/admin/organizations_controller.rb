@@ -82,8 +82,8 @@ class Admin::OrganizationsController < Admin::BaseController
       return
     end
     
-    # Add user to organization as approved
-    if profile.update(organization: @organization, status: 'approved')
+    # Add user to organization as approved and activate the user
+    if profile.update(organization: @organization, status: 'approved') && user.update(activated: true)
       redirect_to members_admin_organization_path(@organization), notice: "用户 #{email} 已成功添加到已批准成员。"
     else
       redirect_to members_admin_organization_path(@organization), alert: '添加用户失败。'

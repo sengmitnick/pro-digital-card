@@ -57,6 +57,7 @@ Default password: admin
 ## Documentation
 
 * [Email Configuration for Private Deployment](docs/EMAIL_CONFIGURATION.md) - 私有化部署邮件服务配置指南
+* [Aliyun Email Troubleshooting](docs/ALIYUN_EMAIL_TROUBLESHOOTING.md) - 阿里云邮件推送故障排查指南
 * [Resend Approval Email](docs/RESEND_APPROVAL_EMAIL.md) - 重新发送审核通过邮件功能说明
 * [Organization Setup](docs/ORGANIZATION_SETUP.md) - 组织设置说明
 * [Registration Flow](docs/REGISTRATION_FLOW.md) - 用户注册流程

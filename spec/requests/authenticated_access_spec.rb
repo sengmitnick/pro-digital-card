@@ -36,26 +36,22 @@ RSpec.describe "Authenticated Access", type: :request do
   end
 
   describe "Authentication flow integration" do
-    it "complete sign up and immediate access flow" do
-      # Sign up
-      post sign_up_path, params: {
-        user: {
-          name: 'New User',
-          email: 'newuser@example.com',
-          password: 'password123',
-          password_confirmation: 'password123'
-        }
-      }
-
+    it "registration routes are disabled" do
+      # Verify sign_up_path is not available
+      expect { get sign_up_path }.to raise_error(NameError)
+      expect { post sign_up_path }.to raise_error(NameError)
+    end
+    
+    it "invitation route requires valid token" do
+      org = Organization.first_or_create!(name: 'Test Org')
+      
+      # Without token, should redirect
+      get new_invitation_path
       expect(response).to redirect_to(root_path)
-
-      # Follow redirect and verify access
-      follow_redirect!
-      expect(response).to be_success_or_under_development
-
-      # Should be able to access protected resources immediately
-      get profile_path
-      expect(response).to have_http_status(:ok)
+      
+      # With valid token, should succeed
+      get new_invitation_path, params: { token: org.invite_token }
+      expect(response).to have_http_status(:success)
     end
 
     it "complete sign in and access flow" do
@@ -85,8 +81,9 @@ RSpec.describe "Authenticated Access", type: :request do
       expect(response).to be_success_with_view_check
     end
 
-    it "renders signup page" do
-      get sign_up_path
+    it "renders invitation application page" do
+      org = Organization.first_or_create!(name: 'Test Org')
+      get new_invitation_path, params: { token: org.invite_token }
       expect(response).to be_success_with_view_check
     end
   end

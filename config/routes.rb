@@ -47,13 +47,15 @@ Rails.application.routes.draw do
   get  "sign_in", to: "sessions#new"
   post "sign_in", to: "sessions#create"
   delete 'sign_out', to: 'sessions#destroy', as: :sign_out
-  get  "sign_up", to: "registrations#new"
-  post "sign_up", to: "registrations#create"
+  # Disabled: Only allow registration through invitation
+  # get  "sign_up", to: "registrations#new"
+  # post "sign_up", to: "registrations#create"
   resource :session, only: [:new, :show, :destroy] do
     get :devices, on: :member
     delete :destroy_one, on: :member
   end
-  resources :registrations, only: [:new, :create]
+  # Disabled: Only allow registration through invitation
+  # resources :registrations, only: [:new, :create]
   resource  :password, only: [:edit, :update]
 
   namespace :identity do
@@ -87,7 +89,8 @@ Rails.application.routes.draw do
       # API authentication routes
       post 'login', to: 'sessions#login'
       delete 'logout', to: 'sessions#destroy'
-      post 'sign_up', to: 'registrations#create'
+      # Disabled: Only allow registration through invitation
+      # post 'sign_up', to: 'registrations#create'
       resource :profile, only: [:show, :update], controller: 'profiles'
       put 'password', to: 'profiles#update_password'
 

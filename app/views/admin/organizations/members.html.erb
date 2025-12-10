@@ -64,7 +64,7 @@
   </div>
 
   <!-- Approved Members -->
-  <div class="card">
+  <div class="card mb-8">
     <div class="card-header">
       <h2 class="text-xl font-semibold text-on-surface">已批准成员 (<%= @approved_profiles.total_count %>)</h2>
     </div>
@@ -113,6 +113,66 @@
         </div>
       <% else %>
         <p class="text-on-surface-variant text-center py-8">暂无已批准成员</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Rejected Members -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-xl font-semibold text-on-surface">已拒绝成员 (<%= @rejected_profiles.total_count %>)</h2>
+    </div>
+    <div class="card-body">
+      <% if @rejected_profiles.any? %>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-border">
+                <th class="text-left p-4 text-on-surface-variant">头像</th>
+                <th class="text-left p-4 text-on-surface-variant">姓名</th>
+                <th class="text-left p-4 text-on-surface-variant">职位</th>
+                <th class="text-left p-4 text-on-surface-variant">类别</th>
+                <th class="text-left p-4 text-on-surface-variant">邮箱</th>
+                <th class="text-left p-4 text-on-surface-variant">拒绝时间</th>
+                <th class="text-right p-4 text-on-surface-variant">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @rejected_profiles.each do |profile| %>
+                <tr class="border-b border-border hover:bg-surface-variant/10">
+                  <td class="p-4">
+                    <% if profile.avatar.attached? %>
+                      <%= image_tag profile.avatar, class: 'w-12 h-12 rounded-full object-cover' %>
+                    <% else %>
+                      <div class="w-12 h-12 rounded-full bg-error/20 flex items-center justify-center">
+                        <span class="text-error font-semibold"><%= profile.full_name[0] %></span>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="p-4 text-on-surface"><%= profile.full_name %></td>
+                  <td class="p-4 text-on-surface"><%= profile.title %></td>
+                  <td class="p-4 text-on-surface"><%= profile.department %></td>
+                  <td class="p-4 text-on-surface"><%= profile.email %></td>
+                  <td class="p-4 text-on-surface-variant"><%= profile.updated_at.strftime('%Y-%m-%d') %></td>
+                  <td class="p-4 text-right">
+                    <div class="flex justify-end gap-2">
+                      <%= button_to '重新审核', reactivate_member_admin_organization_path(@organization, profile_id: profile.id), 
+                          method: :post, class: 'btn-warning btn-sm' %>
+                      <%= button_to '永久删除', destroy_member_admin_organization_path(@organization, profile_id: profile.id), 
+                          method: :delete, class: 'btn-error btn-sm', 
+                          data: { confirm: '确定要永久删除该成员吗？此操作不可恢复！' } %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4">
+          <%= paginate @rejected_profiles, param_name: :rejected_page %>
+        </div>
+      <% else %>
+        <p class="text-on-surface-variant text-center py-8">暂无已拒绝成员</p>
       <% end %>
     </div>
   </div>

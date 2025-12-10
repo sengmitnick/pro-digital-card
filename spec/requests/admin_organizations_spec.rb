@@ -29,4 +29,29 @@ RSpec.describe "Admin::Organizations", type: :request do
       expect(Organization.first.name).to eq('新组织名称')
     end
   end
+
+  describe "POST /admin/organization/members/:profile_id/reactivate" do
+    it "moves rejected member back to pending status" do
+      organization = Organization.first_or_create!(name: '默认组织')
+      profile = create(:profile, organization: organization, status: 'rejected')
+      
+      post reactivate_member_admin_organization_path(profile_id: profile.id)
+      
+      expect(response).to have_http_status(:redirect)
+      expect(profile.reload.status).to eq('pending')
+    end
+  end
+
+  describe "DELETE /admin/organization/members/:profile_id/destroy" do
+    it "permanently deletes a member" do
+      organization = Organization.first_or_create!(name: '默认组组')
+      profile = create(:profile, organization: organization, status: 'rejected')
+      
+      expect {
+        delete destroy_member_admin_organization_path(profile_id: profile.id)
+      }.to change(Profile, :count).by(-1)
+      
+      expect(response).to have_http_status(:redirect)
+    end
+  end
 end

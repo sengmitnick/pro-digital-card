@@ -21,6 +21,10 @@ class Organization < ApplicationRecord
     profiles.where(status: 'pending')
   end
 
+  def rejected_profiles
+    profiles.where(status: 'rejected')
+  end
+
   def is_admin?(user)
     admin_user_id == user&.id
   end

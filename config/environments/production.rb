@@ -45,13 +45,24 @@ Rails.application.configure do
   config.action_mailer.default_url_options = host_and_port_and_protocol
 
   if ENV["EMAIL_SMTP_PASSWORD"].present?
+    smtp_port = ENV.fetch("EMAIL_SMTP_PORT").to_i
+    
     config.action_mailer.smtp_settings = {
       address: ENV.fetch("EMAIL_SMTP_ADDRESS"),
-      port: ENV.fetch("EMAIL_SMTP_PORT"),
+      port: smtp_port,
       user_name: ENV.fetch("EMAIL_SMTP_USERNAME"),
-      password: ENV.fetch("EMAIL_SMTP_PASSWORD")
+      password: ENV.fetch("EMAIL_SMTP_PASSWORD"),
+      # SSL/TLS settings for port 465 (阿里云邮件推送)
+      enable_starttls_auto: smtp_port == 465 ? false : true,
+      ssl: smtp_port == 465 ? true : false,
+      tls: smtp_port == 465 ? true : false,
+      authentication: :login,
+      # Timeout settings
+      open_timeout: 10,
+      read_timeout: 10
     }
     config.action_mailer.delivery_method = :smtp
+    config.action_mailer.raise_delivery_errors = true
   end
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.

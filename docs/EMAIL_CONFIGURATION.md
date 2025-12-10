@@ -105,11 +105,26 @@ EMAIL_SMTP_DOMAIN: 'yourdomain.com'
 
 ```yaml
 EMAIL_SMTP_ADDRESS: 'smtpdm.aliyun.com'
-EMAIL_SMTP_PORT: '465'  # 或 80
+EMAIL_SMTP_PORT: '465'  # 推荐使用 465（SSL）或 80（非加密）
 EMAIL_SMTP_USERNAME: 'noreply@yourdomain.com'
-EMAIL_SMTP_PASSWORD: 'your_smtp_password'
+EMAIL_SMTP_PASSWORD: 'your_smtp_password'  # SMTP 密码，不是控制台登录密码
 EMAIL_SMTP_DOMAIN: 'yourdomain.com'
 ```
+
+**重要提示：**
+- 必须在阿里云控制台先验证发信域名（添加 SPF、MX 记录）
+- SMTP 密码需要在阿里云控制台 “发信地址” 中配置
+- 新账户需要先申请升级到标准版或企业版，免费版有发送限制
+- 端口选择：
+  - **465**：SSL 加密，安全性高（推荐）
+  - **80**：非加密，部分网络环境下可用
+  - **25**：默认 SMTP 端口，大部分云服务器封禁了此端口
+
+**获取 SMTP 密码：**
+1. 登录阿里云控制台
+2. 进入“邮件推送”服务
+3. 点击“发信地址”
+4. 为每个发信地址设置 SMTP 密码（与控制台登录密码不同）
 
 #### 腾讯企业邮箱
 
@@ -128,11 +143,21 @@ EMAIL_SMTP_DOMAIN: 'yourdomain.com'
 **开发环境** (`config/environments/development.rb`):
 ```ruby
 if ENV["EMAIL_SMTP_PASSWORD"].present?
+  smtp_port = ENV.fetch("EMAIL_SMTP_PORT").to_i
+  
   config.action_mailer.smtp_settings = {
     address: ENV.fetch("EMAIL_SMTP_ADDRESS"),
-    port: ENV.fetch("EMAIL_SMTP_PORT"),
+    port: smtp_port,
     user_name: ENV.fetch("EMAIL_SMTP_USERNAME"),
-    password: ENV.fetch("EMAIL_SMTP_PASSWORD")
+    password: ENV.fetch("EMAIL_SMTP_PASSWORD"),
+    # SSL/TLS settings for port 465 (阿里云邮件推送)
+    enable_starttls_auto: smtp_port == 465 ? false : true,
+    ssl: smtp_port == 465 ? true : false,
+    tls: smtp_port == 465 ? true : false,
+    authentication: :login,
+    # Timeout settings
+    open_timeout: 10,
+    read_timeout: 10
   }
   config.action_mailer.delivery_method = :smtp
 end
@@ -141,15 +166,32 @@ end
 **生产环境** (`config/environments/production.rb`):
 ```ruby
 if ENV["EMAIL_SMTP_PASSWORD"].present?
+  smtp_port = ENV.fetch("EMAIL_SMTP_PORT").to_i
+  
   config.action_mailer.smtp_settings = {
     address: ENV.fetch("EMAIL_SMTP_ADDRESS"),
-    port: ENV.fetch("EMAIL_SMTP_PORT"),
+    port: smtp_port,
     user_name: ENV.fetch("EMAIL_SMTP_USERNAME"),
-    password: ENV.fetch("EMAIL_SMTP_PASSWORD")
+    password: ENV.fetch("EMAIL_SMTP_PASSWORD"),
+    # SSL/TLS settings for port 465 (阿里云邮件推送)
+    enable_starttls_auto: smtp_port == 465 ? false : true,
+    ssl: smtp_port == 465 ? true : false,
+    tls: smtp_port == 465 ? true : false,
+    authentication: :login,
+    # Timeout settings
+    open_timeout: 10,
+    read_timeout: 10
   }
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
 end
 ```
+
+**配置说明：**
+- `enable_starttls_auto`：端口 465 使用 SSL，不需要 STARTTLS
+- `ssl` 和 `tls`：端口 465 启用 SSL/TLS 加密
+- `authentication`：使用 login 认证方式
+- `open_timeout` 和 `read_timeout`：设置超时时间为 10 秒，防止连接挂起
 
 ### 4. 发件人地址配置
 

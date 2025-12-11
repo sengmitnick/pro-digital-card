@@ -110,6 +110,8 @@ export class BaseChannelController extends Controller<HTMLElement> {
   private handleChannelDisconnected(): void {
     console.log(`[${this.identifier}] Disconnected from channel`)
     this.isConnected = false
+    this.reportError({ type: 'actioncable', message: 'Channel disconnected', channel: this.identifier })
+    this.channelDisconnected()
   }
 
   /**

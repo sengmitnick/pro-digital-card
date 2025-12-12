@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-surface py-8">
+  <div class="container-lg mx-auto px-4">
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-primary mb-2">我的荣誉认证</h1>
+        <p class="text-secondary">管理您的专业资质和荣誉奖项</p>
+      </div>
+      <%= link_to "返回设置", settings_dashboards_path, class: "btn-ghost" %>
+    </div>
+
+    <div class="mb-6">
+      <%= link_to "➕ 添加新荣誉", new_dashboards_honor_path, class: "btn-primary" %>
+    </div>
+
+    <% if @honors.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% @honors.each do |honor| %>
+          <div class="card">
+            <div class="card-body">
+              <div class="flex items-start gap-4">
+                <div class="icon-container flex-shrink-0 bg-warning/10">
+                  <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-primary mb-1"><%= honor.title %></h3>
+                  <p class="text-secondary text-sm mb-2"><%= honor.organization %></p>
+                  <% if honor.date.present? %>
+                    <p class="text-muted text-sm mb-2"><%= honor.date %></p>
+                  <% end %>
+                  <% if honor.description.present? %>
+                    <p class="text-foreground text-sm"><%= honor.description %></p>
+                  <% end %>
+                  
+                  <div class="flex gap-2 mt-4">
+                    <%= link_to "编辑", edit_dashboards_honor_path(honor), class: "btn-outline-sm" %>
+                    <%= button_to "删除", dashboards_honor_path(honor), 
+                        method: :delete, 
+                        data: { confirm: "确定要删除这个荣誉吗？" },
+                        class: "btn-ghost-sm" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mt-8">
+        <%= paginate @honors %>
+      </div>
+    <% else %>
+      <div class="card text-center py-12">
+        <div class="card-body">
+          <svg class="w-16 h-16 text-primary/40 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          <h3 class="text-xl font-semibold text-primary mb-2">还没有荣誉认证</h3>
+          <p class="text-secondary mb-6">添加荣誉认证，增强您的专业可信度</p>
+          <%= link_to "➕ 添加第一个荣誉", new_dashboards_honor_path, class: "btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= render 'shared/ai_assistant_widget' %>

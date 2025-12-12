@@ -74,7 +74,16 @@ class DashboardsController < ApplicationController
   def profile_params
     params.require(:profile).permit(
       :full_name, :title, :company, :phone, :email, :location, :bio,
-      :avatar, :background_image, :department, :slug, specializations: [],
+      :avatar, :background_image, :department, :slug,
+      :service_advantage_1_title, :service_advantage_1_description,
+      :service_advantage_2_title, :service_advantage_2_description,
+      :service_advantage_3_title, :service_advantage_3_description,
+      :service_process_1_title, :service_process_1_description,
+      :service_process_2_title, :service_process_2_description,
+      :service_process_3_title, :service_process_3_description,
+      :service_process_4_title, :service_process_4_description,
+      :cta_title, :cta_description,
+      specializations: [],
       stats: [:years_experience, :cases_handled, :clients_served, :success_rate]
     )
   end

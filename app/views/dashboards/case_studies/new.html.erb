@@ -1,0 +1,16 @@
+<div class="min-h-screen bg-surface py-8">
+  <div class="container-lg mx-auto px-4">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-primary mb-2">添加成功案例</h1>
+      <p class="text-secondary">展示您的专业能力和工作成果</p>
+    </div>
+
+    <div class="card max-w-4xl">
+      <div class="card-body">
+        <%= render 'form', case_study: @case_study %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render 'shared/ai_assistant_widget' %>

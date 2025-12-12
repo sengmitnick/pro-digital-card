@@ -38,6 +38,12 @@ Rails.application.routes.draw do
       get :share_card
     end
   end
+  
+  # User's own case studies and honors management
+  namespace :dashboards do
+    resources :case_studies, path: 'my/case_studies'
+    resources :honors, path: 'my/honors'
+  end
   # End routes for dashboards
 
   # Public profile card routes

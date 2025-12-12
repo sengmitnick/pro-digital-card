@@ -5,11 +5,12 @@
      data-wechat-share-desc-value="<%= @profile.bio&.truncate(100) || '专业名片分享' %>"
      data-wechat-share-link-value="<%= request.original_url %>"
      data-wechat-share-img-url-value="<%= @share_image_url %>">
-  <!-- Hero Section with Professional Identity -->
+  
+  <!-- Hero Section - Picture (场景画面) -->
   <section class="bg-gradient-to-br from-primary via-primary-dark to-secondary py-16 lg:py-24">
     <div class="container-lg mx-auto px-4">
       <div class="flex flex-col lg:flex-row items-center gap-12">
-        <!-- Avatar and Basic Info -->
+        <!-- Avatar -->
         <div class="flex-shrink-0">
           <div class="avatar avatar-xl border-4 border-white shadow-xl">
             <% if @profile.avatar.attached? %>
@@ -26,20 +27,13 @@
           </div>
         </div>
         
-        <!-- Professional Details -->
+        <!-- Professional Identity -->
         <div class="flex-1 text-center lg:text-left">
           <h1 class="text-4xl lg:text-5xl font-bold text-white mb-2"><%= @profile.full_name %></h1>
           <p class="text-xl text-white/90 mb-4"><%= @profile.title %><% if @profile.company.present? %> · <%= @profile.company %><% end %></p>
           
+          <!-- Contact Badges -->
           <div class="flex flex-wrap gap-3 justify-center lg:justify-start mb-6">
-            <% if @profile.phone.present? %>
-              
-            <% end %>
-            
-            <% if @profile.email.present? %>
-              
-            <% end %>
-            
             <% if @profile.location.present? %>
               <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white text-sm font-medium">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,11 +45,41 @@
             <% end %>
           </div>
           
-          <!-- Specializations -->
+          <!-- Specializations Tags -->
           <% if @profile.specializations_array.present? %>
-            <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+            <div class="flex flex-wrap gap-2 justify-center lg:justify-start mb-6">
               <% @profile.specializations_array.each do |specialization| %>
                 <span class="badge-primary"><%= specialization %></span>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <!-- Professional Stats -->
+          <% if @profile.stats.present? && (@profile.stats['years_experience'].to_i > 0 || @profile.stats['cases_handled'].to_i > 0 || @profile.stats['clients_served'].to_i > 0 || @profile.stats['success_rate'].to_i > 0) %>
+            <div class="inline-flex flex-wrap gap-4 justify-center lg:justify-start p-4 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl">
+              <% if @profile.stats['years_experience'].to_i > 0 %>
+                <div class="text-center px-3">
+                  <div class="text-2xl font-bold text-white"><%= @profile.stats['years_experience'] %><span class="text-base">年</span></div>
+                  <div class="text-xs text-white/80 mt-1">从业经验</div>
+                </div>
+              <% end %>
+              <% if @profile.stats['cases_handled'].to_i > 0 %>
+                <div class="text-center px-3 border-l border-white/30">
+                  <div class="text-2xl font-bold text-white"><%= @profile.stats['cases_handled'] %><span class="text-base">+</span></div>
+                  <div class="text-xs text-white/80 mt-1">服务案例</div>
+                </div>
+              <% end %>
+              <% if @profile.stats['clients_served'].to_i > 0 %>
+                <div class="text-center px-3 border-l border-white/30">
+                  <div class="text-2xl font-bold text-white"><%= @profile.stats['clients_served'] %><span class="text-base">+</span></div>
+                  <div class="text-xs text-white/80 mt-1">服务客户</div>
+                </div>
+              <% end %>
+              <% if @profile.stats['success_rate'].to_i > 0 %>
+                <div class="text-center px-3 border-l border-white/30">
+                  <div class="text-2xl font-bold text-white"><%= @profile.stats['success_rate'] %><span class="text-base">%</span></div>
+                  <div class="text-xs text-white/80 mt-1">成功率</div>
+                </div>
               <% end %>
             </div>
           <% end %>
@@ -65,29 +89,252 @@
   </section>
 
   <!-- Main Content -->
-  <div class="container-xl mx-auto px-4 py-12">
+  <div class="container-xl mx-auto px-4 py-12 space-y-12">
+    
+    <!-- WHY Section - Promise (价值承诺) -->
     <% if @profile.bio.present? %>
-      <!-- About Me Section -->
-      <div class="card overflow-hidden mb-8">
-        <div class="card-header">
-          <h2 class="text-2xl font-bold text-primary">关于我</h2>
+      <section class="card overflow-hidden">
+        <div class="relative">
+          <% if @profile.background_image.attached? %>
+            <div class="aspect-w-16 aspect-h-6 lg:aspect-h-9 bg-surface-elevated">
+              <%= image_tag @profile.background_image, 
+                  class: 'w-full h-full object-cover',
+                  alt: "关于#{@profile.full_name}" %>
+            </div>
+          <% else %>
+            <!-- Decorative gradient when no image -->
+            <div class="h-32 lg:h-48 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10"></div>
+          <% end %>
         </div>
         
-        <% if @profile.background_image.attached? %>
-          <!-- Image Grid Layout (reference style) -->
-          <div class="aspect-w-16 aspect-h-9 bg-surface-elevated">
-            <%= image_tag @profile.background_image, 
-                class: 'w-full h-full object-cover',
-                alt: "关于#{@profile.full_name}" %>
-          </div>
-        <% end %>
-        
         <div class="card-body">
-          <div class="prose max-w-none text-secondary leading-relaxed">
+          <div class="flex items-start gap-4 mb-6">
+            <div class="icon-container-lg flex-shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="text-2xl lg:text-3xl font-bold text-primary mb-2">为什么选择我？</h2>
+              <p class="text-muted text-sm">Why - 我的使命与价值主张</p>
+            </div>
+          </div>
+          
+          <div class="prose max-w-none text-secondary leading-relaxed text-base lg:text-lg">
             <%= simple_format(@profile.bio) %>
           </div>
         </div>
-      </div>
+      </section>
+    <% end %>
+
+    <!-- HOW Section - Process (方法与能力) -->
+    <% if @profile.service_advantage_1_title.present? || @profile.service_process_1_title.present? %>
+      <section class="card">
+        <div class="card-body">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="icon-container-lg flex-shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="text-2xl lg:text-3xl font-bold text-primary mb-2">我如何帮助您？</h2>
+              <p class="text-muted text-sm">How - 专业方法与服务优势</p>
+            </div>
+          </div>
+
+          <!-- Service Advantages Grid -->
+          <% if @profile.service_advantage_1_title.present? %>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <% [1, 2, 3].each do |i| %>
+                <% title = @profile.send("service_advantage_#{i}_title") %>
+                <% desc = @profile.send("service_advantage_#{i}_description") %>
+                <% if title.present? %>
+                  <div class="stat-card">
+                    <div class="flex items-start gap-3">
+                      <div class="icon-container-sm flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-primary mb-2"><%= title %></h3>
+                        <% if desc.present? %>
+                          <p class="text-secondary text-sm leading-relaxed"><%= desc %></p>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <!-- Service Process Timeline -->
+          <% if @profile.service_process_1_title.present? %>
+            <div class="border-t border-border pt-8">
+              <h3 class="text-xl font-bold text-primary mb-6">服务流程</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <% [1, 2, 3, 4].each_with_index do |i, index| %>
+                  <% title = @profile.send("service_process_#{i}_title") %>
+                  <% desc = @profile.send("service_process_#{i}_description") %>
+                  <% if title.present? %>
+                    <div class="relative">
+                      <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0">
+                          <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg">
+                            <%= index + 1 %>
+                          </div>
+                        </div>
+                        <div class="flex-1 pt-1">
+                          <h4 class="font-semibold text-primary mb-1"><%= title %></h4>
+                          <% if desc.present? %>
+                            <p class="text-secondary text-sm leading-relaxed"><%= desc %></p>
+                          <% end %>
+                        </div>
+                      </div>
+                      <!-- Connector line (hidden on last item) -->
+                      <% unless index == 3 %>
+                        <div class="hidden lg:block absolute top-5 left-full w-full h-0.5 bg-border -ml-5 -mr-5" style="width: calc(100% - 2.5rem);"></div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <!-- WHAT Section - Prove (成果证明) -->
+    <% if @case_studies.present? || @honors.present? %>
+      <section class="space-y-8">
+        <div class="flex items-start gap-4">
+          <div class="icon-container-lg flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-2xl lg:text-3xl font-bold text-primary mb-2">我做过什么？</h2>
+            <p class="text-muted text-sm">What - 成功案例与专业认可</p>
+          </div>
+        </div>
+
+        <!-- Case Studies -->
+        <% if @case_studies.present? %>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl font-bold text-primary">成功案例</h3>
+            </div>
+            <div class="card-body">
+              <div class="space-y-6">
+                <% @case_studies.each_with_index do |case_study, index| %>
+                  <div class="<%= 'border-t border-border pt-6' if index > 0 %>">
+                    <div class="flex items-start gap-4">
+                      <div class="flex-shrink-0">
+                        <div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                          <%= index + 1 %>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-3 mb-2">
+                          <h4 class="text-lg font-semibold text-primary"><%= case_study.title %></h4>
+                          <% if case_study.category.present? %>
+                            <span class="badge-secondary text-xs"><%= case_study.category %></span>
+                          <% end %>
+                          <% if case_study.date.present? %>
+                            <span class="text-muted text-sm"><%= case_study.date %></span>
+                          <% end %>
+                        </div>
+                        <p class="text-secondary leading-relaxed"><%= case_study.description %></p>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Honors & Achievements -->
+        <% if @honors.present? %>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl font-bold text-primary">荣誉与认证</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <% @honors.each do |honor| %>
+                  <div class="flex items-start gap-4 p-4 bg-surface-elevated rounded-lg border border-border hover:shadow-sm transition-default">
+                    <div class="flex-shrink-0">
+                      <div class="w-12 h-12 rounded-full bg-warning/10 text-warning flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-primary mb-1"><%= honor.title %></h4>
+                      <p class="text-secondary text-sm mb-1"><%= honor.organization %></p>
+                      <% if honor.date.present? %>
+                        <p class="text-muted text-xs"><%= honor.date %></p>
+                      <% end %>
+                      <% if honor.description.present? %>
+                        <p class="text-secondary text-sm mt-2"><%= honor.description %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <!-- Push (行动号召) - CTA Section -->
+    <% if @profile.cta_title.present? %>
+      <section class="card bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5 border-2 border-primary/20 overflow-hidden">
+        <div class="card-body text-center py-12">
+          <div class="max-w-2xl mx-auto">
+            <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+            
+            <h2 class="text-2xl lg:text-3xl font-bold text-primary mb-4">
+              <%= @profile.cta_title %>
+            </h2>
+            
+            <% if @profile.cta_description.present? %>
+              <p class="text-secondary text-lg mb-8 leading-relaxed">
+                <%= @profile.cta_description %>
+              </p>
+            <% end %>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <%= link_to consultations_path(profile_id: @profile.id), 
+                  class: "btn-primary btn-lg" do %>
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                立即咨询
+              <% end %>
+              
+              <%= link_to teams_path(profile_id: @profile.id), 
+                  class: "btn-outline-primary btn-lg" do %>
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                了解团队
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </section>
     <% end %>
   </div>
 
@@ -148,7 +395,7 @@
       </div>
     </div>
   </nav>
-
-  <!-- Footer CTA -->
   
+  <!-- Add bottom padding to prevent content being hidden by fixed nav -->
+  <div class="h-16"></div>
 </div>

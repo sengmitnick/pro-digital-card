@@ -1,0 +1,67 @@
+<div class="min-h-screen bg-surface py-8">
+  <div class="container-lg mx-auto px-4">
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-primary mb-2">我的成功案例</h1>
+        <p class="text-secondary">管理您的专业案例展示</p>
+      </div>
+      <%= link_to "返回设置", settings_dashboards_path, class: "btn-ghost" %>
+    </div>
+
+    <div class="mb-6">
+      <%= link_to "➕ 添加新案例", new_dashboards_case_study_path, class: "btn-primary" %>
+    </div>
+
+    <% if @case_studies.any? %>
+      <div class="space-y-4">
+        <% @case_studies.each do |case_study| %>
+          <div class="card">
+            <div class="card-body">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex-1">
+                  <h3 class="text-xl font-semibold text-primary mb-2"><%= case_study.title %></h3>
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    <% if case_study.category.present? %>
+                      <span class="badge-primary"><%= case_study.category %></span>
+                    <% end %>
+                    <% if case_study.date.present? %>
+                      <span class="badge-secondary"><%= case_study.date %></span>
+                    <% end %>
+                    <% if case_study.position.present? %>
+                      <span class="badge-ghost">排序: <%= case_study.position %></span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex gap-2 flex-shrink-0 ml-4">
+                  <%= link_to "编辑", edit_dashboards_case_study_path(case_study), class: "btn-outline-sm" %>
+                  <%= button_to "删除", dashboards_case_study_path(case_study), 
+                      method: :delete, 
+                      data: { confirm: "确定要删除这个案例吗？" },
+                      class: "btn-ghost-sm" %>
+                </div>
+              </div>
+              <p class="text-foreground"><%= simple_format(case_study.description) %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mt-8">
+        <%= paginate @case_studies %>
+      </div>
+    <% else %>
+      <div class="card text-center py-12">
+        <div class="card-body">
+          <svg class="w-16 h-16 text-primary/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <h3 class="text-xl font-semibold text-primary mb-2">还没有案例</h3>
+          <p class="text-secondary mb-6">添加成功案例，展示您的专业能力和工作成果</p>
+          <%= link_to "➕ 添加第一个案例", new_dashboards_case_study_path, class: "btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= render 'shared/ai_assistant_widget' %>

@@ -1,0 +1,42 @@
+<%= form_with model: case_study, url: case_study.new_record? ? dashboards_case_studies_path : dashboards_case_study_path(case_study), method: case_study.new_record? ? :post : :patch, local: true, class: "space-y-6" do |form| %>
+  <%= render 'shared/form_error_message', model: case_study %>
+
+  <div>
+    <%= form.label :title, '案例标题', class: "form-label" %>
+    <%= form.text_field :title, required: true, class: "form-input", placeholder: "例如：某大型企业数字化转型咨询项目" %>
+    <div class="form-help">简洁有力，10-30字</div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= form.label :category, '案例分类', class: "form-label" %>
+      <%= form.text_field :category, class: "form-input", placeholder: "例如：企业咨询、个人教练" %>
+      <div class="form-help">便于筛选分类</div>
+    </div>
+
+    <div>
+      <%= form.label :date, '完成日期', class: "form-label" %>
+      <%= form.text_field :date, class: "form-input", placeholder: "例如：2024年6月 或 2024-06" %>
+      <div class="form-help">格式：YYYY年MM月</div>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, '详细描述', class: "form-label" %>
+    <%= form.text_area :description, rows: 8, required: true, class: "form-input", placeholder: "包含背景、方案、成果等，80-200字" %>
+    <div class="form-help">使用STAR法则：情境(Situation)、任务(Task)、行动(Action)、结果(Result)</div>
+  </div>
+
+  <div>
+    <%= form.label :position, '排序位置', class: "form-label" %>
+    <%= form.number_field :position, class: "form-input", placeholder: "数字越小越靠前（可选）" %>
+    <div class="form-help">数字越小排序越靠前，留空则自动递增</div>
+  </div>
+
+  <div class="pt-6 border-t border-border">
+    <div class="flex justify-end gap-3">
+      <%= link_to "取消", dashboards_case_studies_path, class: "btn-ghost" %>
+      <%= form.submit case_study.new_record? ? "创建案例" : "更新案例", class: "btn-primary" %>
+    </div>
+  </div>
+<% end %>

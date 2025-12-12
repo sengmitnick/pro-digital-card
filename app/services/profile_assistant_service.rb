@@ -333,7 +333,8 @@ class ProfileAssistantService < ApplicationService
         return { status: 'error', message: '请提供搜索关键词' }.to_json
       end
 
-      members = profile.organization.approved_profiles.where.not(id: profile.id)
+      # 搜索所有已批准的团队成员（包括当前profile，因为访客可能就是要找当前这个人）
+      members = profile.organization.approved_profiles
       keyword_lower = keyword.downcase
       
       # 多字段搜索：姓名、职位、专业领域、部门

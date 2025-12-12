@@ -52,7 +52,9 @@ class Profile < ApplicationRecord
   end
 
   def specializations_array
-    specializations.is_a?(Array) ? specializations : []
+    return [] unless specializations.is_a?(Array)
+    # 过滤空值和空字符串，确保只返回有效关键词
+    specializations.compact.map(&:strip).reject(&:blank?)
   end
 
   # Onboarding status methods

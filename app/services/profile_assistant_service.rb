@@ -209,19 +209,28 @@ class ProfileAssistantService < ApplicationService
   # MCP 工具实现
   class << self
     def get_profile_info(profile, arguments)
-      # 简化数据结构，只返回必要信息
+      # 只返回有实际内容的字段，不暴露空值
+      data = {
+        full_name: profile.full_name,
+        title: profile.title
+      }
+      
+      # Only include non-empty fields
+      data[:company] = profile.company if profile.company.present?
+      data[:department] = profile.department if profile.department.present?
+      data[:specializations] = profile.specializations_array if profile.specializations_array.present?
+      data[:bio] = profile.bio.truncate(200) if profile.bio.present?
+      
+      # Only include stats if they have meaningful values (> 0)
+      years_exp = profile.stats&.dig('years_experience')
+      data[:years_experience] = years_exp if years_exp.present? && years_exp > 0
+      
+      cases_count = profile.stats&.dig('cases_handled')
+      data[:cases_handled] = cases_count if cases_count.present? && cases_count > 0
+      
       result = {
         status: 'success',
-        data: {
-          full_name: profile.full_name,
-          title: profile.title,
-          company: profile.company || '未设置',
-          department: profile.department || '未设置',
-          specializations: profile.specializations_array,
-          years_experience: profile.stats&.dig('years_experience') || 0,
-          cases_handled: profile.stats&.dig('cases_handled') || 0,
-          bio: profile.bio&.truncate(200) || '暂无简介'
-        }
+        data: data
       }
 
       # 只在明确请求时添加案例和荣誉
@@ -309,14 +318,17 @@ class ProfileAssistantService < ApplicationService
         displayed_count: displayed_members.size,
         has_more: members.size > limit,
         members: displayed_members.map do |member|
-          {
+          member_data = {
             id: member.id,
             full_name: member.full_name,
-            title: member.title,
-            department: member.department || '未设置',
-            specializations: member.specializations_array.first(3),
-            years_experience: member.stats&.dig('years_experience') || 0
+            title: member.title
           }
+          # Only include non-empty fields
+          member_data[:department] = member.department if member.department.present?
+          member_data[:specializations] = member.specializations_array.first(3) if member.specializations_array.present?
+          years_exp = member.stats&.dig('years_experience')
+          member_data[:years_experience] = years_exp if years_exp.present? && years_exp > 0
+          member_data
         end
       }
 
@@ -354,14 +366,17 @@ class ProfileAssistantService < ApplicationService
         total_matches: matched_members.size,
         displayed_count: displayed_members.size,
         members: displayed_members.map do |member|
-          {
+          member_data = {
             id: member.id,
             full_name: member.full_name,
-            title: member.title,
-            department: member.department || '未设置',
-            specializations: member.specializations_array.first(3),
-            years_experience: member.stats&.dig('years_experience') || 0
+            title: member.title
           }
+          # Only include non-empty fields
+          member_data[:department] = member.department if member.department.present?
+          member_data[:specializations] = member.specializations_array.first(3) if member.specializations_array.present?
+          years_exp = member.stats&.dig('years_experience')
+          member_data[:years_experience] = years_exp if years_exp.present? && years_exp > 0
+          member_data
         end
       }
 
@@ -389,22 +404,32 @@ class ProfileAssistantService < ApplicationService
         return { status: 'error', message: '该成员不在同一组织' }.to_json
       end
 
+      member_data = {
+        id: recommended_profile.id,
+        slug: recommended_profile.slug,
+        full_name: recommended_profile.full_name,
+        title: recommended_profile.title
+      }
+      
+      # Only include non-empty fields
+      member_data[:department] = recommended_profile.department if recommended_profile.department.present?
+      member_data[:specializations] = recommended_profile.specializations_array.first(3) if recommended_profile.specializations_array.present?
+      
+      years_exp = recommended_profile.stats&.dig('years_experience')
+      member_data[:years_experience] = years_exp if years_exp.present? && years_exp > 0
+      
+      cases_count = recommended_profile.stats&.dig('cases_handled')
+      member_data[:cases_handled] = cases_count if cases_count.present? && cases_count > 0
+      
+      if recommended_profile.avatar.attached?
+        member_data[:avatar_url] = Rails.application.routes.url_helpers.rails_blob_path(recommended_profile.avatar, only_path: true)
+      end
+
       {
         status: 'success',
         action: 'recommend_member',
         reason: reason,
-        member: {
-          id: recommended_profile.id,
-          slug: recommended_profile.slug,
-          full_name: recommended_profile.full_name,
-          title: recommended_profile.title,
-          department: recommended_profile.department || '未设置',
-          specializations: recommended_profile.specializations_array.first(3),
-          years_experience: recommended_profile.stats&.dig('years_experience') || 0,
-          cases_handled: recommended_profile.stats&.dig('cases_handled') || 0,
-          avatar_url: recommended_profile.avatar.attached? ? 
-            Rails.application.routes.url_helpers.rails_blob_path(recommended_profile.avatar, only_path: true) : nil
-        }
+        member: member_data
       }.to_json
     end
   end

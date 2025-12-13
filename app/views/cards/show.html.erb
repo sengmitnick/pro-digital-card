@@ -18,7 +18,12 @@
             <% elsif @profile.avatar_url.present? %>
               <img src="<%= @profile.avatar_url %>" 
                    alt="<%= @profile.full_name %>" 
-                   class="w-full h-full object-cover">
+                   class="w-full h-full object-cover"
+                   loading="lazy"
+                   data-controller="image-fallback"
+                   data-image-fallback-max-retries-value="3"
+                   data-image-fallback-retry-delay-value="1000"
+                   data-image-fallback-fallback-text-value="头像加载失败">
             <% else %>
               <div class="w-full h-full bg-white/20 flex items-center justify-center text-white text-4xl font-bold">
                 <%= @profile.full_name.first %>

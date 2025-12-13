@@ -192,7 +192,11 @@ export default class extends BaseChannelController {
   }
 
   private scrollToBottom(): void {
-    this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+    // Scroll the parent scrollable container, not the messages container itself
+    const scrollableContainer = this.messagesTarget.parentElement
+    if (scrollableContainer) {
+      scrollableContainer.scrollTop = scrollableContainer.scrollHeight
+    }
   }
 
   private escapeHtml(text: string): string {

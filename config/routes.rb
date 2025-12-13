@@ -120,7 +120,9 @@ Rails.application.routes.draw do
     end
     resources :honors
     resources :case_studies
-    resources :profiles
+    resources :profiles do
+      post :regenerate_specializations, on: :member
+    end
     resources :admin_oplogs, only: [:index, :show]
     resources :administrators
     get 'login', to: 'sessions#new', as: :login
